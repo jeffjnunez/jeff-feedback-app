@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import FeedbackContext from '../context/FeedbackContext';
 
 const RatingSelect = ({ select }) => {
+    const { feedbackEdit } = useContext(FeedbackContext);
+
     const [selected, setSelected] = useState(10);
+
+    useEffect(() => {
+        setSelected(feedbackEdit.item.rating);
+    }, [feedbackEdit]);
 
     const handleChange = (e) => {
         setSelected(+e.currentTarget.value); // changes data type from string to number

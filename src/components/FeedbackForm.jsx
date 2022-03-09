@@ -1,16 +1,28 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import RatingSelect from './RatingSelect';
 import Card from './shared/Card';
 import Button from './shared/Button';
 import FeedbackContext from '../context/FeedbackContext';
 
 const FeedbackForm = () => {
-    const { addFeedback } = useContext(FeedbackContext);
+    const {
+        feedbackEdit,
+        addFeedback,
+        updateFeedback
+    } = useContext(FeedbackContext);
 
     const [text, setText] = useState('');
     const [rating, setRating] = useState(10);
     const [btnDisabled, setBtnDisabled] = useState(true);
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (feedbackEdit.edit) {
+            setBtnDisabled(false);
+            setText(feedbackEdit.item.text);
+            setRating(feedbackEdit.item.rating);
+        }
+    }, [feedbackEdit]);
 
     const handleTextChange = (e) => {
         // TODO fix apparent bug where input value can go above 10 characters
@@ -41,7 +53,12 @@ const FeedbackForm = () => {
                 rating,
             };
 
-            addFeedback(newFeedback);
+            if (feedbackEdit.edit) {
+                updateFeedback(feedbackEdit.item.id, newFeedback);
+            }
+            else {
+                addFeedback(newFeedback);
+            }
 
             setText('');
         }
