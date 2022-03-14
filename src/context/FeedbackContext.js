@@ -40,7 +40,7 @@ export const FeedbackProvider = ({ children }) => {
     const editFeedback = (item) => {
         setFeedbackEdit({
             item,
-            edit: true,
+            edit: JSON.stringify(item) === '{}' ? false : true,
         });
     };
 

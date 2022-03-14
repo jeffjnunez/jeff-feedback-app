@@ -8,6 +8,7 @@ const FeedbackForm = () => {
     const {
         feedbackEdit,
         addFeedback,
+        editFeedback,
         updateFeedback
     } = useContext(FeedbackContext);
 
@@ -47,7 +48,7 @@ const FeedbackForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (text.trim().length >= 10) {
+        if (text.trim().length >= 10 && e.nativeEvent.submitter.id === 'submit-button') {
             const newFeedback = {
                 text,
                 rating,
@@ -59,9 +60,11 @@ const FeedbackForm = () => {
             else {
                 addFeedback(newFeedback);
             }
-
-            setText('');
         }
+
+        setText('');
+        editFeedback({});
+        setBtnDisabled(true);
     }
 
     return (
@@ -76,7 +79,10 @@ const FeedbackForm = () => {
                         placeholder='Write a review'
                         value={text}
                     />
-                    <Button type='submit' isDisabled={btnDisabled}>Send</Button>
+                    <Button id='submit-button' type='submit' isDisabled={btnDisabled}>{feedbackEdit.edit ? 'Update' : 'Send'}</Button>
+                    {feedbackEdit.edit && (
+                        <Button id='cancel-button' type='submit' version='secondary'>Cancel</Button>
+                    )}
                 </div>
                 {message && <div className='message'>{message}</div>}
             </form>
