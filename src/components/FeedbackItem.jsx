@@ -1,14 +1,32 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { FaEdit, FaTimes } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import Card from './shared/Card';
 import FeedbackContext from '../context/FeedbackContext';
 
 const FeedbackItem = ({ item }) => {
-    const { editFeedback, deleteFeedback } = useContext(FeedbackContext);
+    const {
+        feedbackEdit,
+        editFeedback,
+        deleteFeedback
+    } = useContext(FeedbackContext);
+
+    const [isReversed, setIsReversed] = useState(false);
+
+    const isBeingEdited = () => {
+        if (!feedbackEdit || !feedbackEdit.item) {
+            return false;
+        }
+
+        return feedbackEdit.item.id === item.id;
+    };
+
+    useEffect(() => {
+        setIsReversed(isBeingEdited());
+    }, [feedbackEdit]);
 
     return (
-        <Card>
+        <Card reverse={isReversed}>
             <div className='num-display'>{item.rating}</div>
             <button onClick={() => editFeedback(item)} className='edit'>
                 <FaEdit color='purple' />
